@@ -1,5 +1,3 @@
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
@@ -1031,6 +1029,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var _garage_garage_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(
     /*! ./garage/garage.component */
     "./src/app/garage/garage.component.ts");
+    /* harmony import */
+
+
+    var _angular_common__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(
+    /*! @angular/common */
+    "./node_modules/@angular/common/fesm2015/common.js");
 
     var AppModule = function AppModule() {
       _classCallCheck(this, AppModule);
@@ -1039,7 +1043,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_2__["NgModule"])({
       declarations: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"], _garage_vehicle_details_vehicle_details_component__WEBPACK_IMPORTED_MODULE_4__["VehicleDetailsComponent"], _reports_reports_component__WEBPACK_IMPORTED_MODULE_8__["ReportsComponent"], _user_profile_user_profile_component__WEBPACK_IMPORTED_MODULE_9__["UserProfileComponent"], _vehicle_page_vehicle_page_component__WEBPACK_IMPORTED_MODULE_10__["VehiclePageComponent"], _home_home_component__WEBPACK_IMPORTED_MODULE_11__["HomeComponent"], _garage_garage_component__WEBPACK_IMPORTED_MODULE_12__["GarageComponent"]],
       imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"], _angular_platform_browser_animations__WEBPACK_IMPORTED_MODULE_5__["BrowserAnimationsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["FormsModule"], _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_7__["AppRoutingModule"]],
-      providers: [],
+      providers: [_angular_common__WEBPACK_IMPORTED_MODULE_13__["DatePipe"]],
       bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
     })], AppModule);
     /***/
@@ -1194,11 +1198,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(
     /*! @angular/forms */
     "./node_modules/@angular/forms/fesm2015/forms.js");
+    /* harmony import */
+
+
+    var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(
+    /*! @angular/common */
+    "./node_modules/@angular/common/fesm2015/common.js");
+
+    var dateTemplate = 'yyyy-MM-dd';
+    var yearRegex = '^(19|20)\\d{2}$';
 
     var VehicleDetailsComponent = /*#__PURE__*/function () {
-      function VehicleDetailsComponent() {
+      function VehicleDetailsComponent(datePipe) {
         _classCallCheck(this, VehicleDetailsComponent);
 
+        this.datePipe = datePipe;
         this.onDelete = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.editMode = false;
       }
@@ -1206,14 +1220,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _createClass(VehicleDetailsComponent, [{
         key: "ngOnInit",
         value: function ngOnInit() {
-          this.controls = {
+          this.form = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"]({
             name: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.name, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
-            factoryYear: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.factoryYear, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern('^(19|20)\\d{2}$')]),
-            purchaseDate: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.purchaseDate, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
+            factoryYear: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.factoryYear, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern(yearRegex)]),
+            purchaseDate: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.datePipe.transform(this.vehicle.purchaseDate, dateTemplate), _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
             initialMileage: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.initialMileage),
             currentMileage: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.currentMileage)
-          };
-          this.form = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"](this.controls);
+          });
         }
       }, {
         key: "edit",
@@ -1229,7 +1242,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "save",
         value: function save() {
           console.log(this.form);
-          this.vehicle = Object.assign({}, this.form.value);
+          this.vehicle = Object.assign({
+            id: this.vehicle.id
+          }, this.form.value);
           this.editMode = false;
           this.resetForm();
         }
@@ -1242,10 +1257,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "resetForm",
         value: function resetForm() {
-          var _this = this;
-
-          Object.keys(this.controls).forEach(function (control) {
-            return _this.form.patchValue(_defineProperty({}, control, _this.vehicle[control]));
+          this.form.patchValue({
+            name: this.vehicle.name,
+            factoryYear: this.vehicle.factoryYear,
+            purchaseDate: this.datePipe.transform(this.vehicle.purchaseDate, dateTemplate),
+            initialMileage: this.vehicle.initialMileage,
+            currentMileage: this.vehicle.currentMileage
           });
         }
       }]);
@@ -1253,7 +1270,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       return VehicleDetailsComponent;
     }();
 
-    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])('vehicle')], VehicleDetailsComponent.prototype, "vehicle", void 0);
+    VehicleDetailsComponent.ctorParameters = function () {
+      return [{
+        type: _angular_common__WEBPACK_IMPORTED_MODULE_3__["DatePipe"]
+      }];
+    };
+
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()], VehicleDetailsComponent.prototype, "vehicle", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])()], VehicleDetailsComponent.prototype, "onDelete", void 0);
     VehicleDetailsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
       selector: 'vehicle-details',

@@ -472,6 +472,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _vehicle_page_vehicle_page_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./vehicle-page/vehicle-page.component */ "./src/app/vehicle-page/vehicle-page.component.ts");
 /* harmony import */ var _home_home_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./home/home.component */ "./src/app/home/home.component.ts");
 /* harmony import */ var _garage_garage_component__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./garage/garage.component */ "./src/app/garage/garage.component.ts");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm2015/common.js");
+
 
 
 
@@ -505,7 +507,7 @@ AppModule = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
             _angular_forms__WEBPACK_IMPORTED_MODULE_6__["ReactiveFormsModule"],
             _app_routing_module__WEBPACK_IMPORTED_MODULE_7__["AppRoutingModule"]
         ],
-        providers: [],
+        providers: [_angular_common__WEBPACK_IMPORTED_MODULE_13__["DatePipe"]],
         bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_3__["AppComponent"]]
     })
 ], AppModule);
@@ -591,23 +593,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm2015/forms.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm2015/common.js");
 
 
 
+
+const dateTemplate = 'yyyy-MM-dd';
+const yearRegex = '^(19|20)\\d{2}$';
 let VehicleDetailsComponent = class VehicleDetailsComponent {
-    constructor() {
+    constructor(datePipe) {
+        this.datePipe = datePipe;
         this.onDelete = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.editMode = false;
     }
     ngOnInit() {
-        this.controls = {
+        this.form = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"]({
             name: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.name, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
-            factoryYear: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.factoryYear, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern('^(19|20)\\d{2}$')]),
-            purchaseDate: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.purchaseDate, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
+            factoryYear: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.factoryYear, [_angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required, _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].pattern(yearRegex)]),
+            purchaseDate: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.datePipe.transform(this.vehicle.purchaseDate, dateTemplate), _angular_forms__WEBPACK_IMPORTED_MODULE_2__["Validators"].required),
             initialMileage: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.initialMileage),
             currentMileage: new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormControl"](this.vehicle.currentMileage)
-        };
-        this.form = new _angular_forms__WEBPACK_IMPORTED_MODULE_2__["FormGroup"](this.controls);
+        });
     }
     edit() {
         this.editMode = true;
@@ -617,7 +623,7 @@ let VehicleDetailsComponent = class VehicleDetailsComponent {
     }
     save() {
         console.log(this.form);
-        this.vehicle = Object.assign({}, this.form.value);
+        this.vehicle = Object.assign({ id: this.vehicle.id }, this.form.value);
         this.editMode = false;
         this.resetForm();
     }
@@ -626,11 +632,20 @@ let VehicleDetailsComponent = class VehicleDetailsComponent {
         this.resetForm();
     }
     resetForm() {
-        Object.keys(this.controls).forEach(control => this.form.patchValue({ [control]: this.vehicle[control] }));
+        this.form.patchValue({
+            name: this.vehicle.name,
+            factoryYear: this.vehicle.factoryYear,
+            purchaseDate: this.datePipe.transform(this.vehicle.purchaseDate, dateTemplate),
+            initialMileage: this.vehicle.initialMileage,
+            currentMileage: this.vehicle.currentMileage
+        });
     }
 };
+VehicleDetailsComponent.ctorParameters = () => [
+    { type: _angular_common__WEBPACK_IMPORTED_MODULE_3__["DatePipe"] }
+];
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
-    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])('vehicle')
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
 ], VehicleDetailsComponent.prototype, "vehicle", void 0);
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])()
