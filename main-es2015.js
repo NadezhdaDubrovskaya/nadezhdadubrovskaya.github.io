@@ -45,7 +45,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"container-fluid\">\n\n  <div class=\"row\">\n    <div class=\"col-sm-8 mx-auto my-4\">\n      <div class=\"row\">\n        <div class=\"col-sm-10\">\n          <h1>Garage</h1>\n        </div>\n        <div class=\"col-sm-2\">\n          <button class=\"btn btn-light mt-2 align-right\">Add new vehicle</button>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"row\" *ngFor=\"let vehicle of vehicles\">\n    <div class=\"col-sm-8 mx-auto\">\n      <vehicle-details [vehicle]=\"vehicle\" (onDelete)=\"delete($event)\"></vehicle-details>\n    </div>\n  </div>\n\n</div>\n\n\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"container-fluid\">\n\n  <div class=\"row\">\n    <div class=\"col-sm-8 mx-auto my-4\">\n      <div class=\"row\">\n        <div class=\"col-md-8 col-sm-12\">\n          <h1>Garage</h1>\n        </div>\n        <div class=\"col-md-4 col-sm-12\">\n          <button class=\"btn btn-dark mt-2 align-right\" (click)=\"addNewVehicle()\">Add new vehicle</button>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"row\" *ngFor=\"let vehicle of vehicles\">\n    <div class=\"col-sm-8 mx-auto\">\n      <vehicle-details\n        [vehicle]=\"vehicle\"\n        [newVehicle]=\"newVehiclesIndexed.includes(vehicle.id)\"\n        (onDelete)=\"delete($event)\"\n        (onNewSave)=\"removeNewVehicleIndex($event)\"\n      ></vehicle-details>\n    </div>\n  </div>\n\n</div>\n\n\n");
 
 /***/ }),
 
@@ -58,7 +58,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"card mb-3\">\n  <div class=\"row no-gutters\">\n\n    <div class=\"col-md-3\">\n      <img src=\"assets/img/logo.png\" class=\"card-img\" alt=\"...\">\n    </div>\n\n    <div class=\"col-md-8\">\n\n      <!-- View form -->\n      <div *ngIf=\"!editMode\" class=\"card-body\">\n        <h5 class=\"card-title\">{{ vehicle.name }}</h5>\n        <p class=\"card-text\">Factory Year: {{ vehicle.factoryYear }}</p>\n        <p class=\"card-text\">Purchase Date: {{ vehicle.purchaseDate | date }}</p>\n        <p class=\"card-text\">Initial Mileage: {{ vehicle.initialMileage }}</p>\n        <p class=\"card-text\">Current Mileage: {{ vehicle.currentMileage }}</p>\n\n        <div>\n          <button class=\"btn btn-dark-green mr-2 my-2\" routerLink=\"/vehicle-page\">\n            View expenses\n          </button>\n          <button class=\"btn btn-dark mx-2 my-2\" (click)=\"edit()\">\n            Edit\n          </button>\n          <button class=\"btn btn-dark ml-2 my-2\" (click)=\"delete()\">\n            Delete\n          </button>\n        </div>\n\n      </div>\n\n      <!-- Edit form -->\n      <form *ngIf=\"editMode\" class=\"card-body\" [formGroup]=\"form\" (ngSubmit)=\"save()\">\n        <h5 class=\"card-title\">\n          <label><input type=\"text\" formControlName=\"name\"></label>\n        </h5>\n        <div *ngIf=\"form.get('name').invalid && form.get('name').touched\" class=\"validation\">\n          <small>Vehicle name is required</small>\n        </div>\n\n        <p class=\"card-text\">\n          <label>Factory Year: <input type=\"text\" formControlName=\"factoryYear\"/></label>\n        </p>\n        <div *ngIf=\"form.get('factoryYear').invalid && form.get('factoryYear').touched\" class=\"validation\">\n          <small *ngIf=\"form.get('factoryYear').errors.required\">Factory year is required</small>\n          <small *ngIf=\"form.get('factoryYear').errors.pattern\">Enter valid year</small>\n        </div>\n\n        <p class=\"card-text\">\n          <label class=\"card-text\">Purchase Date: <input type=\"date\" formControlName=\"purchaseDate\"/></label>\n        </p>\n        <div *ngIf=\"form.get('purchaseDate').invalid && form.get('purchaseDate').touched\" class=\"validation\">\n          <small>Purchase Date is required</small>\n        </div>\n\n        <p class=\"card-text\">\n          <label class=\"card-text\">Initial Mileage: <input type=\"text\" formControlName=\"initialMileage\"/></label>\n        </p>\n        <div *ngIf=\"form.get('initialMileage').invalid && form.get('initialMileage').touched\" class=\"validation\">\n          <small>Initial Mileage is required</small>\n        </div>\n\n        <p class=\"card-text\">\n          <label class=\"card-text\">Current Mileage: <input type=\"text\" formControlName=\"currentMileage\"/></label>\n        </p>\n        <div *ngIf=\"form.get('currentMileage').invalid && form.get('currentMileage').touched\" class=\"validation\">\n          <small>Current Mileage is required</small>\n        </div>\n\n        <div>\n          <button class=\"btn btn-dark mx-2 my-2\" type=submit [disabled]=\"form.invalid\" (click)=\"save()\">\n            Save\n          </button>\n          <button class=\"btn btn-dark mx-2 my-2\" type=reset (click)=\"cancel()\">\n            Cancel\n          </button>\n        </div>\n      </form>\n\n    </div>\n  </div>\n</div>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"card mb-3\">\n  <div class=\"row no-gutters\">\n\n    <div class=\"col-md-3\">\n      <img src=\"assets/img/logo.png\" class=\"card-img\" alt=\"...\">\n    </div>\n\n    <div class=\"col-md-6\">\n\n      <!-- View form -->\n      <div *ngIf=\"!editMode && !newVehicle\" class=\"card-body\">\n        <h5 class=\"card-title\">{{ vehicle.name }}</h5>\n        <p class=\"card-text\">Factory Year: {{ vehicle.factoryYear }}</p>\n        <p class=\"card-text\">Purchase Date: {{ vehicle.purchaseDate | date }}</p>\n        <p class=\"card-text\">Initial Mileage: {{ vehicle.initialMileage }}</p>\n        <p class=\"card-text\">Current Mileage: {{ vehicle.currentMileage }}</p>\n\n        <div>\n          <button class=\"btn btn-dark mr-2 my-2\" [routerLink]=\"['/vehicle',vehicle.id]\">\n            View expenses\n          </button>\n          <button class=\"btn btn-dark mx-2 my-2\" (click)=\"edit()\">\n            Edit\n          </button>\n          <button class=\"btn btn-danger ml-2 my-2\" (click)=\"delete()\">\n            Delete\n          </button>\n        </div>\n\n      </div>\n\n      <!-- Edit form -->\n      <form *ngIf=\"editMode || newVehicle\" class=\"card-body\" [formGroup]=\"form\" (ngSubmit)=\"save()\">\n        <h5 class=\"card-title\">\n          <label><input type=\"text\" formControlName=\"name\"></label>\n        </h5>\n        <div *ngIf=\"form.get('name').invalid && form.get('name').touched\" class=\"validation\">\n          <small>Vehicle name is required</small>\n        </div>\n\n        <p class=\"card-text\">\n          <label>Factory Year: <input type=\"text\" formControlName=\"factoryYear\"/></label>\n        </p>\n        <div *ngIf=\"form.get('factoryYear').invalid && form.get('factoryYear').touched\" class=\"validation\">\n          <small *ngIf=\"form.get('factoryYear').errors.required\">Factory year is required</small>\n          <small *ngIf=\"form.get('factoryYear').errors.pattern\">Enter valid year</small>\n        </div>\n\n        <p class=\"card-text\">\n          <label class=\"card-text\">Purchase Date: <input type=\"date\" formControlName=\"purchaseDate\"/></label>\n        </p>\n        <div *ngIf=\"form.get('purchaseDate').invalid && form.get('purchaseDate').touched\" class=\"validation\">\n          <small>Purchase Date is required</small>\n        </div>\n\n        <p class=\"card-text\">\n          <label class=\"card-text\">Initial Mileage: <input type=\"text\" formControlName=\"initialMileage\"/></label>\n        </p>\n        <div *ngIf=\"form.get('initialMileage').invalid && form.get('initialMileage').touched\" class=\"validation\">\n          <small>Initial Mileage is required</small>\n        </div>\n\n        <p class=\"card-text\">\n          <label class=\"card-text\">Current Mileage: <input type=\"text\" formControlName=\"currentMileage\"/></label>\n        </p>\n        <div *ngIf=\"form.get('currentMileage').invalid && form.get('currentMileage').touched\" class=\"validation\">\n          <small>Current Mileage is required</small>\n        </div>\n\n        <div>\n          <button class=\"btn btn-dark mx-2 my-2\" type=button [disabled]=\"form.invalid\" (click)=\"save()\">\n            Save\n          </button>\n          <button class=\"btn btn-danger mx-2 my-2\" type=button (click)=\"cancel()\">\n            Cancel\n          </button>\n        </div>\n      </form>\n\n    </div>\n  </div>\n</div>\n");
 
 /***/ }),
 
@@ -71,7 +71,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<p>home works!</p>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"container-fluid\">\n\n  <div class=\"row\">\n    <div class=\"col-sm-10 mx-auto my-4\">\n      <div class=\"row\">\n        <div class=\"col-md-12\">\n          <h1>Recent Expenses</h1>\n        </div>\n      </div>\n    </div>\n  </div>\n\n</div>\n");
 
 /***/ }),
 
@@ -84,7 +84,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<p>reports works!</p>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"container-fluid\">\n\n  <div class=\"row\">\n    <div class=\"col-sm-10 mx-auto my-4\">\n      <div class=\"row\">\n        <div class=\"col-md-12\">\n          <h1>Reports</h1>\n        </div>\n      </div>\n    </div>\n  </div>\n\n</div>\n");
 
 /***/ }),
 
@@ -97,7 +97,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<p>user-profile works!</p>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"container-fluid\">\n\n  <div class=\"row\">\n    <div class=\"col-sm-10 mx-auto my-4\">\n      <div class=\"row\">\n        <div class=\"col-md-12\">\n          <h1>User Profile</h1>\n        </div>\n      </div>\n    </div>\n  </div>\n\n</div>\n");
 
 /***/ }),
 
@@ -110,7 +110,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("<p>vehicle-page works!</p>\n");
+/* harmony default export */ __webpack_exports__["default"] = ("<div class=\"container-fluid\">\n\n  <div class=\"row\"></div>\n  <div class=\"col-sm-10 mx-auto my-4\">\n    <div class=\"row\">\n      <div class=\"col-sm-12\">\n        <div routerLink=\"/garage\">\n          <h1>{{ vehicle.name }}</h1>\n          <p>Factory Year: {{ vehicle.factoryYear }}</p>\n          <p>Purchase Date: {{ vehicle.purchaseDate | date }}</p>\n        </div>\n        <button class=\"btn btn-dark mt-2\">New expense</button>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"row\"></div>\n\n</div>\n");
 
 /***/ }),
 
@@ -391,7 +391,7 @@ __webpack_require__.r(__webpack_exports__);
 const routes = [
     { path: '', component: _home_home_component__WEBPACK_IMPORTED_MODULE_4__["HomeComponent"] },
     { path: 'garage', component: _garage_garage_component__WEBPACK_IMPORTED_MODULE_5__["GarageComponent"] },
-    { path: 'vehicle-page', component: _vehicle_page_vehicle_page_component__WEBPACK_IMPORTED_MODULE_6__["VehiclePageComponent"] },
+    { path: 'vehicle/:id', component: _vehicle_page_vehicle_page_component__WEBPACK_IMPORTED_MODULE_6__["VehiclePageComponent"] },
     { path: 'reports', component: _reports_reports_component__WEBPACK_IMPORTED_MODULE_3__["ReportsComponent"] },
     { path: 'user-profile', component: _user_profile_user_profile_component__WEBPACK_IMPORTED_MODULE_7__["UserProfileComponent"] }
 ];
@@ -547,12 +547,33 @@ __webpack_require__.r(__webpack_exports__);
 
 let GarageComponent = class GarageComponent {
     constructor() {
+        this.newVehiclesIndexed = [];
     }
     ngOnInit() {
-        this.vehicles = _vehicles__WEBPACK_IMPORTED_MODULE_2__["vehicles"]; //TODO temp solution, use back-end
+        this.vehicles = [..._vehicles__WEBPACK_IMPORTED_MODULE_2__["vehicles"]]; //TODO temp solution, use back-end
+    }
+    addNewVehicle() {
+        let newIndex = 0;
+        this.vehicles.forEach(v => { if (v.id > newIndex)
+            newIndex = v.id; });
+        newIndex++;
+        const newVehicle = {
+            id: newIndex,
+            name: 'New Vehicle',
+            factoryYear: null,
+            purchaseDate: null,
+            initialMileage: 0,
+            currentMileage: 0,
+            avatar: ''
+        };
+        this.vehicles.unshift(newVehicle);
+        this.newVehiclesIndexed.push(newIndex);
     }
     delete(id) {
         this.vehicles = this.vehicles.filter(vehicle => vehicle.id !== id);
+    }
+    removeNewVehicleIndex(id) {
+        this.newVehiclesIndexed = this.newVehiclesIndexed.filter(v => v != id);
     }
 };
 GarageComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
@@ -576,7 +597,7 @@ GarageComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = (".btn-dark-green {\n  color: #fff;\n  background-color: #366f54;\n  border-color: #1d2124;\n}\n\ninput {\n  margin: 0;\n  padding: 0;\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvZ2FyYWdlL3ZlaGljbGUtZGV0YWlscy92ZWhpY2xlLWRldGFpbHMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFdBQVc7RUFDWCx5QkFBeUI7RUFDekIscUJBQXFCO0FBQ3ZCOztBQUVBO0VBQ0UsU0FBUztFQUNULFVBQVU7QUFDWiIsImZpbGUiOiJzcmMvYXBwL2dhcmFnZS92ZWhpY2xlLWRldGFpbHMvdmVoaWNsZS1kZXRhaWxzLmNvbXBvbmVudC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuYnRuLWRhcmstZ3JlZW4ge1xuICBjb2xvcjogI2ZmZjtcbiAgYmFja2dyb3VuZC1jb2xvcjogIzM2NmY1NDtcbiAgYm9yZGVyLWNvbG9yOiAjMWQyMTI0O1xufVxuXG5pbnB1dCB7XG4gIG1hcmdpbjogMDtcbiAgcGFkZGluZzogMDtcbn1cbiJdfQ== */");
+/* harmony default export */ __webpack_exports__["default"] = ("input {\n  margin: 0;\n  padding: 0;\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvZ2FyYWdlL3ZlaGljbGUtZGV0YWlscy92ZWhpY2xlLWRldGFpbHMuY29tcG9uZW50LmNzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNFLFNBQVM7RUFDVCxVQUFVO0FBQ1oiLCJmaWxlIjoic3JjL2FwcC9nYXJhZ2UvdmVoaWNsZS1kZXRhaWxzL3ZlaGljbGUtZGV0YWlscy5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiaW5wdXQge1xuICBtYXJnaW46IDA7XG4gIHBhZGRpbmc6IDA7XG59XG4iXX0= */");
 
 /***/ }),
 
@@ -603,7 +624,9 @@ const yearRegex = '^(19|20)\\d{2}$';
 let VehicleDetailsComponent = class VehicleDetailsComponent {
     constructor(datePipe) {
         this.datePipe = datePipe;
+        this.newVehicle = false;
         this.onDelete = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
+        this.onNewSave = new _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"]();
         this.editMode = false;
     }
     ngOnInit() {
@@ -622,14 +645,22 @@ let VehicleDetailsComponent = class VehicleDetailsComponent {
         this.onDelete.emit(this.vehicle.id);
     }
     save() {
-        console.log(this.form);
         this.vehicle = Object.assign({ id: this.vehicle.id }, this.form.value);
         this.editMode = false;
+        if (this.newVehicle) {
+            this.onNewSave.emit(this.vehicle.id);
+        }
         this.resetForm();
     }
     cancel() {
-        this.editMode = false;
-        this.resetForm();
+        if (this.newVehicle) {
+            this.delete();
+            this.onNewSave.emit(this.vehicle.id);
+        }
+        else {
+            this.editMode = false;
+            this.resetForm();
+        }
     }
     resetForm() {
         this.form.patchValue({
@@ -648,8 +679,14 @@ tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
 ], VehicleDetailsComponent.prototype, "vehicle", void 0);
 tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])()
+], VehicleDetailsComponent.prototype, "newVehicle", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])()
 ], VehicleDetailsComponent.prototype, "onDelete", void 0);
+tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+    Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])()
+], VehicleDetailsComponent.prototype, "onNewSave", void 0);
 VehicleDetailsComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'vehicle-details',
@@ -803,7 +840,7 @@ UserProfileComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJzcmMvYXBwL3ZlaGljbGUtcGFnZS92ZWhpY2xlLXBhZ2UuY29tcG9uZW50LmNzcyJ9 */");
+/* harmony default export */ __webpack_exports__["default"] = ("p {\n  margin-bottom: 0.25rem !important;\n}\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNyYy9hcHAvdmVoaWNsZS1wYWdlL3ZlaGljbGUtcGFnZS5jb21wb25lbnQuY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsaUNBQWlDO0FBQ25DIiwiZmlsZSI6InNyYy9hcHAvdmVoaWNsZS1wYWdlL3ZlaGljbGUtcGFnZS5jb21wb25lbnQuY3NzIiwic291cmNlc0NvbnRlbnQiOlsicCB7XG4gIG1hcmdpbi1ib3R0b206IDAuMjVyZW0gIWltcG9ydGFudDtcbn1cbiJdfQ== */");
 
 /***/ }),
 
@@ -819,13 +856,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VehiclePageComponent", function() { return VehiclePageComponent; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm2015/core.js");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm2015/router.js");
+/* harmony import */ var _vehicles__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../vehicles */ "./src/app/vehicles.ts");
+
+
 
 
 let VehiclePageComponent = class VehiclePageComponent {
-    constructor() { }
+    constructor(activatedRoute) {
+        this.activatedRoute = activatedRoute;
+    }
     ngOnInit() {
+        const id = this.activatedRoute.snapshot.paramMap.get("id");
+        this.vehicle = _vehicles__WEBPACK_IMPORTED_MODULE_3__["vehicles"].find(v => v.id == id);
     }
 };
+VehiclePageComponent.ctorParameters = () => [
+    { type: _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"] }
+];
 VehiclePageComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
     Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
         selector: 'app-vehicle-page',
